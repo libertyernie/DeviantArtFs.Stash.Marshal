@@ -44,8 +44,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface
 
             services.AddSession(options =>
             {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.IdleTimeout = TimeSpan.FromHours(8);
                 options.Cookie.HttpOnly = true;
             });
         }
