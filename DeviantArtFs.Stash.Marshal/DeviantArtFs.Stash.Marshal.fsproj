@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="StashNode.fs" />
+    <Compile Include="StashRoot.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DeviantArtFs" Version="0.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.5.4" />
+  </ItemGroup>
+
+</Project>
