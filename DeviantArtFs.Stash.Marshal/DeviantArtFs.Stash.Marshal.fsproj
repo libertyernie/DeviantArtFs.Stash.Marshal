@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="SavedDeltaEntry.fs" />
     <Compile Include="StashNode.fs" />
     <Compile Include="StashRoot.fs" />
   </ItemGroup>
