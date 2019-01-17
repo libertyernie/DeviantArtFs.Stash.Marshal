@@ -53,12 +53,12 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
                 return RedirectToAction("Index");
             }
             int client_id = Startup.DeviantArtClientId;
-            return Redirect($"https://www.deviantart.com/oauth2/authorize?response_type=code&client_id={client_id}&redirect_uri=https://localhost:5001/Home/Callback&scope=stash");
+            return Redirect($"https://www.deviantart.com/oauth2/authorize?response_type=code&client_id={client_id}&redirect_uri=https://localhost:44385/Home/Callback&scope=stash");
         }
 
         public async Task<IActionResult> Callback(string code, string state = null)
         {
-            var result = await _appReg.GetTokenAsync(code, new Uri("https://localhost:5001/Home/Callback"));
+            var result = await _appReg.GetTokenAsync(code, new Uri("https://localhost:44385/Home/Callback"));
             var token = new Token
             {
                 Id = Guid.NewGuid(),
