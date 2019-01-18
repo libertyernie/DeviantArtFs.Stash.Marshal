@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Data;
 using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,25 +29,29 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             return View();
         }
 
-        private async Task<IDeviantArtAccessToken> GetAccessTokenAsync()
+        private async Task<Token> GetAccessTokenAsync()
         {
-            if (HttpContext.Session.TryGetValue("token-id", out byte[] data))
+            string str = User.Claims
+                .Where(c => c.Type == "token-id")
+                .Select(c => c.Value)
+                .FirstOrDefault();
+            if (str != null && Guid.TryParse(str, out Guid tokenId))
             {
-                var token = await _context.Tokens.SingleOrDefaultAsync(t => t.Id == new Guid(data));
-                if (token.ExpiresAt < DateTimeOffset.UtcNow.AddMinutes(5))
+                var token = await _context.Tokens.SingleOrDefaultAsync(t => t.Id == tokenId);
+                if (token != null)
                 {
-                    var result = await _appReg.RefreshAsync(token.RefreshToken);
-                    token.AccessToken = result.AccessToken;
-                    token.RefreshToken = result.RefreshToken;
-                    token.ExpiresAt = result.ExpiresAt;
-                    await _context.SaveChangesAsync();
+                    if (token.ExpiresAt < DateTimeOffset.UtcNow.AddMinutes(5))
+                    {
+                        var result = await _appReg.RefreshAsync(token.RefreshToken);
+                        token.AccessToken = result.AccessToken;
+                        token.RefreshToken = result.RefreshToken;
+                        token.ExpiresAt = result.ExpiresAt;
+                        await _context.SaveChangesAsync();
+                    }
+                    return token;
                 }
-                return token;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public async Task<IActionResult> Login()
@@ -53,22 +61,32 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
                 return RedirectToAction("Index");
             }
             int client_id = Startup.DeviantArtClientId;
-            return Redirect($"https://www.deviantart.com/oauth2/authorize?response_type=code&client_id={client_id}&redirect_uri=https://localhost:44385/Home/Callback&scope=stash");
+            return Redirect($"https://www.deviantart.com/oauth2/authorize?response_type=code&client_id={client_id}&redirect_uri=https://{HttpContext.Request.Host}/Home/Callback&scope=stash");
         }
 
         public async Task<IActionResult> Callback(string code, string state = null)
         {
-            var result = await _appReg.GetTokenAsync(code, new Uri("https://localhost:44385/Home/Callback"));
+            var result = await _appReg.GetTokenAsync(code, new Uri($"https://{HttpContext.Request.Host}/Home/Callback"));
+            var me = await Requests.User.Whoami.ExecuteAsync(result);
             var token = new Token
             {
                 Id = Guid.NewGuid(),
+                UserId = me.Userid,
                 AccessToken = result.AccessToken,
                 RefreshToken = result.RefreshToken,
                 ExpiresAt = result.ExpiresAt
             };
             _context.Tokens.Add(token);
             await _context.SaveChangesAsync();
-            HttpContext.Session.Set("token-id", token.Id.ToByteArray());
+
+            var claimsIdentity = new ClaimsIdentity(
+                new[] {
+                    new Claim(ClaimTypes.Name, me.Username),
+                    new Claim("token-id", token.Id.ToString())
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
             return RedirectToAction("Index");
         }
 
@@ -79,7 +97,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
                 return RedirectToAction("Login");
 
             var me = await Requests.User.Whoami.ExecuteAsync(t);
-            return Content(me.Username);
+            return Json(me);
         }
 
         public async Task<IActionResult> FullRefresh()
@@ -88,13 +106,12 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             if (t == null)
                 return RedirectToAction("Login");
 
-            var me = await Requests.User.Whoami.ExecuteAsync(t);
             var existingCursors = await _context.DeltaCursors
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .ToListAsync();
 
             var existingItems = await _context.StashEntries
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .OrderBy(x => x.Position)
                 .ToListAsync();
 
@@ -111,14 +128,13 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             if (t == null)
                 return RedirectToAction("Login");
 
-            var me = await Requests.User.Whoami.ExecuteAsync(t);
             var existingCursor = await _context.DeltaCursors
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .Select(x => x.Cursor)
                 .SingleOrDefaultAsync();
 
             var existingItems = await _context.StashEntries
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .OrderBy(x => x.Position)
                 .ToListAsync();
 
@@ -135,14 +151,13 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             if (t == null)
                 return RedirectToAction("Login");
 
-            var me = await Requests.User.Whoami.ExecuteAsync(t);
             var existingCursor = await _context.DeltaCursors
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .Select(x => x.Cursor)
                 .SingleOrDefaultAsync();
 
             var existingItems = await _context.StashEntries
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .OrderBy(x => x.Position)
                 .ToListAsync();
             var stashRoot = new StashRoot();
@@ -179,7 +194,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             {
                 _context.StashEntries.Add(new StashEntry
                 {
-                    UserId = me.Userid,
+                    UserId = t.UserId,
                     ItemId = new_entry.Itemid,
                     StackId = new_entry.Stackid,
                     MetadataJson = new_entry.MetadataJson,
@@ -188,11 +203,11 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             }
 
             var ex = await _context.DeltaCursors
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .SingleOrDefaultAsync();
             if (ex == null)
             {
-                ex = new DeltaCursor { UserId = me.Userid };
+                ex = new DeltaCursor { UserId = t.UserId };
                 _context.DeltaCursors.Add(ex);
             }
             ex.Cursor = existingCursor;
@@ -208,10 +223,8 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             if (t == null)
                 return RedirectToAction("Login");
 
-            var me = await Requests.User.Whoami.ExecuteAsync(t);
-
             var existingItems = await _context.StashEntries
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .OrderBy(x => x.Position)
                 .ToListAsync();
             var stashRoot = new StashRoot();
@@ -235,14 +248,25 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             if (t == null)
                 return RedirectToAction("Login");
 
-            var me = await Requests.User.Whoami.ExecuteAsync(t);
-
             var existingItems = await _context.StashEntries
-                .Where(x => x.UserId == me.Userid)
+                .Where(x => x.UserId == t.UserId)
                 .Where(x => x.ItemId == itemid)
                 .SingleAsync();
             IBclStashMetadata m = StashMetadata.Parse(existingItems.MetadataJson);
             return View("ViewItem", m);
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            var t = await GetAccessTokenAsync();
+            if (t != null)
+            {
+                _context.Tokens.RemoveRange(_context.Tokens.Where(x => x.Id == t.Id));
+                await _context.SaveChangesAsync();
+                await HttpContext.SignOutAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+            }
+            return RedirectToAction("Index");
         }
     }
 }

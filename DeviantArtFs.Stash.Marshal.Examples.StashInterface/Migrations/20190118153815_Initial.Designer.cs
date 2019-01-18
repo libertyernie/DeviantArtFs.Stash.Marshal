@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Migrations
 {
     [DbContext(typeof(ExampleDbContext))]
-    [Migration("20190117175812_Initial")]
+    [Migration("20190118153815_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DeviantArtFs.Examples.StashInterface.Models.DeltaCursor", b =>
+            modelBuilder.Entity("DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models.DeltaCursor", b =>
                 {
                     b.Property<Guid>("UserId");
 
@@ -33,7 +33,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Migrations
                     b.ToTable("DeltaCursors");
                 });
 
-            modelBuilder.Entity("DeviantArtFs.Examples.StashInterface.Models.StashEntry", b =>
+            modelBuilder.Entity("DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models.StashEntry", b =>
                 {
                     b.Property<int>("StashEntryId")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Migrations
                     b.ToTable("StashEntries");
                 });
 
-            modelBuilder.Entity("DeviantArtFs.Examples.StashInterface.Models.Token", b =>
+            modelBuilder.Entity("DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models.Token", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();

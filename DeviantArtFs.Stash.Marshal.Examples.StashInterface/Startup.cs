@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -40,13 +41,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface
                     Configuration["DeviantArtClientSecret"]));
             DeviantArtClientId = int.Parse(Configuration["DeviantArtClientId"]);
 
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromHours(8);
-                options.Cookie.HttpOnly = true;
-            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +58,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface
                 app.UseHsts();
             }
 
-            app.UseSession();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

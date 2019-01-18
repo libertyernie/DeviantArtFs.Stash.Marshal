@@ -10,6 +10,9 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models
     {
         public Guid Id { get; set; }
 
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public Guid UserId { get; set; }
+
         [Required]
         public string AccessToken { get; set; }
 
