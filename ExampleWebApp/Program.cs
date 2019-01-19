@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface
+namespace ExampleWebApp
 {
     public class Program
     {

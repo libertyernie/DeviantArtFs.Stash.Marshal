@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DeviantArtFs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models
+namespace ExampleWebApp.Models
 {
     public class StashEntry : IStashDelta
     {

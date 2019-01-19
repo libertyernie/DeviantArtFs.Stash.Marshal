@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Data;
+using DeviantArtFs;
+using ExampleWebApp.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface
+namespace ExampleWebApp
 {
     public class Startup
     {

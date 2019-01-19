@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models
+namespace ExampleWebApp.Models
 {
     public class DeltaCursor
     {

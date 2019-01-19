@@ -1,11 +1,11 @@
-﻿using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models;
+﻿using ExampleWebApp.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Data
+namespace ExampleWebApp.Data
 {
     public class ExampleDbContext : DbContext
     {

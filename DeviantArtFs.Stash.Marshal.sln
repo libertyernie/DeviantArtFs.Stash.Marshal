@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DeviantArtFs.Stash.Marshal", "DeviantArtFs.Stash.Marshal\DeviantArtFs.Stash.Marshal.fsproj", "{4698B0BE-DFC0-4A84-9FCC-490D38BF34C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviantArtFs.Stash.Marshal.Examples.StashInterface", "DeviantArtFs.Stash.Marshal.Examples.StashInterface\DeviantArtFs.Stash.Marshal.Examples.StashInterface.csproj", "{5710C405-1A4F-413E-9731-82668336954E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWebApp", "ExampleWebApp\ExampleWebApp.csproj", "{5710C405-1A4F-413E-9731-82668336954E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

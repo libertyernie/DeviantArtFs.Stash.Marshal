@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Data;
-using DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models;
+using DeviantArtFs;
+using DeviantArtFs.Stash.Marshal;
+using ExampleWebApp.Data;
+using ExampleWebApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
+namespace ExampleWebApp.Controllers
 {
     public class HomeController : Controller
     {
@@ -67,7 +69,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
         public async Task<IActionResult> Callback(string code, string state = null)
         {
             var result = await _appReg.GetTokenAsync(code, new Uri($"https://{HttpContext.Request.Host}/Home/Callback"));
-            var me = await Requests.User.Whoami.ExecuteAsync(result);
+            var me = await DeviantArtFs.Requests.User.Whoami.ExecuteAsync(result);
             var token = new Token
             {
                 Id = Guid.NewGuid(),
@@ -96,7 +98,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             if (t == null)
                 return RedirectToAction("Login");
 
-            var me = await Requests.User.Whoami.ExecuteAsync(t);
+            var me = await DeviantArtFs.Requests.User.Whoami.ExecuteAsync(t);
             return Json(me);
         }
 
@@ -174,7 +176,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
 
             while (true)
             {
-                var delta = await Requests.Stash.Delta.ExecuteAsync(t, paging, new Requests.Stash.DeltaRequest { Cursor = existingCursor });
+                var delta = await DeviantArtFs.Requests.Stash.Delta.ExecuteAsync(t, paging, new DeviantArtFs.Requests.Stash.DeltaRequest { Cursor = existingCursor });
                 existingCursor = delta.Cursor;
                 if (delta.Reset)
                 {
