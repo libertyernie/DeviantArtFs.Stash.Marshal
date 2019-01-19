@@ -25,7 +25,7 @@ Example usage (C#):
 	var stashRoot = new StashRoot();
 
 	void Refresh() {
-		var delta = await Stash.Delta.GetAllAsync(token, new Stash.DeltaAllRequest { Cursor = StashCursor });
+		var delta = await DeviantArt.Requests.Stash.Delta.GetAllAsync(token, new DeviantArt.Requests.Stash.DeltaAllRequest { Cursor = StashCursor });
 		cursor = delta.Cursor;
 
 		Deserialize(delta.Entries);
@@ -42,7 +42,7 @@ Example usage (C#):
         }
 	}
 
-See the project DeviantArtFs.Stash.Marshal.Examples.StashInterface for a more concrete example.
+See the project ExampleWebApp for a more concrete example.
 
 Known bugs:
 

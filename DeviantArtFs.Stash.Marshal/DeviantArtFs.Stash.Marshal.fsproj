@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.6.1</Version>
+    <Version>0.7.1</Version>
     <Authors>libertyernie</Authors>
     <Company>libertyernie</Company>
     <Description>An F# library (.NET Standard 2.0) to interact with the Sta.sh API and manage state</Description>
     <PackageLicenseUrl>https://raw.githubusercontent.com/libertyernie/DeviantArtFs.Stash.Marshal/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/libertyernie/DeviantArtFs.Stash.Marshal</PackageProjectUrl>
     <PackageTags>deviantart sta.sh fsharp</PackageTags>
-    <PackageReleaseNotes>0.6.1: Split DeviantArtFs.Stash.Marshal into its own source code repository</PackageReleaseNotes>
+    <PackageReleaseNotes>0.7.1: Build against newest DeviantArtFs</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
