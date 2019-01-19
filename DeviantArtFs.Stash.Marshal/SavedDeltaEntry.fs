@@ -10,7 +10,7 @@ type SavedDeltaEntry =
         MetadataJson: string
         Position: int
     }
-    interface DeviantArtFs.ISerializedStashDeltaEntry with
+    interface DeviantArtFs.IStashDelta with
         member this.Itemid = this.Itemid
         member this.Stackid = this.Stackid |> Nullable
         member this.MetadataJson = this.MetadataJson

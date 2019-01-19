@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models
 {
-    public class StashEntry : ISerializedStashDeltaEntry
+    public class StashEntry : IStashDelta
     {
         public int StashEntryId { get; set; }
 
@@ -21,12 +21,12 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Models
 
         public int Position { get; set; }
 
-        long? ISerializedStashDeltaEntry.Itemid => ItemId;
+        long? IStashDelta.Itemid => ItemId;
 
-        long? ISerializedStashDeltaEntry.Stackid => StackId;
+        long? IStashDelta.Stackid => StackId;
 
-        string ISerializedStashDeltaEntry.MetadataJson => MetadataJson;
+        string IStashDelta.MetadataJson => MetadataJson;
 
-        int? ISerializedStashDeltaEntry.Position => Position;
+        int? IStashDelta.Position => Position;
     }
 }

@@ -166,16 +166,15 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
                 stashRoot.Apply(i);
             }
 
-            var req = new Requests.Stash.DeltaRequest
+            var paging = new PagingParams
             {
-                Cursor = existingCursor,
                 Offset = 0,
                 Limit = 120
             };
 
             while (true)
             {
-                var delta = await Requests.Stash.Delta.ExecuteAsync(t, req);
+                var delta = await Requests.Stash.Delta.ExecuteAsync(t, paging, new Requests.Stash.DeltaRequest { Cursor = existingCursor });
                 existingCursor = delta.Cursor;
                 if (delta.Reset)
                 {
@@ -186,7 +185,7 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
                     stashRoot.Apply(i);
                 }
                 if (!delta.HasMore) break;
-                req.Offset = delta.NextOffset ?? 0;
+                paging.Offset = delta.NextOffset ?? 0;
             }
 
             _context.StashEntries.RemoveRange(existingItems);
@@ -256,17 +255,22 @@ namespace DeviantArtFs.Stash.Marshal.Examples.StashInterface.Controllers
             return View("ViewItem", m);
         }
 
-        public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> Logout()
         {
             var t = await GetAccessTokenAsync();
-            if (t != null)
+            if (t is Token dbToken)
             {
-                _context.Tokens.RemoveRange(_context.Tokens.Where(x => x.Id == t.Id));
+                _context.Tokens.RemoveRange(_context.Tokens.Where(x => x.Id == dbToken.Id));
                 await _context.SaveChangesAsync();
                 await HttpContext.SignOutAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme);
+                await _appReg.RevokeAsync(dbToken.RefreshToken, revoke_refresh_only: true);
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            else
+            {
+                return Content($"The token returned by GetAccessTokenAsync() is not from the database");
+            }
         }
     }
 }

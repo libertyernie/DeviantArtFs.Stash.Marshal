@@ -50,7 +50,7 @@ type StashRoot() =
     member __.TryFindItemById itemid =
         seq {
             for node in nodes do
-                match node.Metadata.Itemid with
+                match node.Metadata.itemid with
                 | Some i -> if i = itemid then yield node
                 | None -> ()
         } |> Seq.tryHead
@@ -58,9 +58,9 @@ type StashRoot() =
     member __.TryFindStackById stackid =
         seq {
             for node in nodes do
-                match node.Metadata.Itemid with
+                match node.Metadata.itemid with
                 | Some _ -> ()
-                | None -> if node.Metadata.Stackid = Some stackid then yield node
+                | None -> if node.Metadata.stackid = Some stackid then yield node
         } |> Seq.tryHead
 
     member this.FindItemById itemid = Option.get (this.TryFindItemById itemid)
@@ -77,13 +77,13 @@ type StashRoot() =
         let rec grab (list: seq<StashNode>) (stackid: int64 option) = seq {
             for n in list do
                 if n.ParentStackId = stackid then
-                    match n.Metadata.Itemid with
+                    match n.Metadata.itemid with
                     | Some _ -> yield n
-                    | None -> yield! grab n.Children n.Metadata.Stackid
+                    | None -> yield! grab n.Children n.Metadata.stackid
         }
         grab nodes None
 
-    member this.Apply (entry: ISerializedStashDeltaEntry) =
+    member this.Apply (entry: IStashDelta) =
         let itemid = entry.Itemid |> Option.ofNullable
         let stackid = entry.Stackid |> Option.ofNullable
         let metadata = entry.MetadataJson |> Option.ofObj |> Option.map StashMetadata.Parse
