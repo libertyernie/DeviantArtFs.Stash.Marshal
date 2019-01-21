@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DeviantArtFs.Stash.Marshal", "DeviantArtFs.Stash.Marshal\DeviantArtFs.Stash.Marshal.fsproj", "{4698B0BE-DFC0-4A84-9FCC-490D38BF34C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWebApp", "ExampleWebApp\ExampleWebApp.csproj", "{5710C405-1A4F-413E-9731-82668336954E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D17A3AF2-31AB-4F32-8FF1-DFEE65B38F39}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
@@ -23,10 +21,6 @@ Global
 		{4698B0BE-DFC0-4A84-9FCC-490D38BF34C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4698B0BE-DFC0-4A84-9FCC-490D38BF34C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4698B0BE-DFC0-4A84-9FCC-490D38BF34C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5710C405-1A4F-413E-9731-82668336954E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5710C405-1A4F-413E-9731-82668336954E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5710C405-1A4F-413E-9731-82668336954E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5710C405-1A4F-413E-9731-82668336954E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
