@@ -42,6 +42,8 @@ Example usage (C#):
         }
 	}
 
+See the project ExampleWebApp for a more concrete example.
+
 Known bugs:
 
 * When editing a Sta.sh item from the DeviantArt submission page (and using "Save & Exit"), its itemid will change, and StashRoot will think it's a different item. This seems to be a bug on DeviantArt's end.
