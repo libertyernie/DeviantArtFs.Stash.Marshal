@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.7.1</Version>
+    <Version>0.9.0</Version>
     <Authors>libertyernie</Authors>
     <Company>libertyernie</Company>
-    <Description>An F# library (.NET Standard 2.0) to interact with the Sta.sh API and manage state</Description>
+    <Description>An F#/.NET library to interact with the Sta.sh API and manage state (.NET Standard 2.0)</Description>
     <PackageLicenseUrl>https://raw.githubusercontent.com/libertyernie/DeviantArtFs.Stash.Marshal/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/libertyernie/DeviantArtFs.Stash.Marshal</PackageProjectUrl>
     <PackageTags>deviantart sta.sh fsharp</PackageTags>
-    <PackageReleaseNotes>0.7.1: Build against newest DeviantArtFs</PackageReleaseNotes>
+    <PackageReleaseNotes>0.9.0: Build against newest DeviantArtFs</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DeviantArtFs" Version="0.7.1" />
+    <PackageReference Include="DeviantArtFs" Version="0.9.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.5.4" />
+    <PackageReference Update="FSharp.Core" Version="4.6.0" />
   </ItemGroup>
 
 </Project>
